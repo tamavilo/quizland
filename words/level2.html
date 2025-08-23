@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Level 2 - Words Fun</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            max-width: 800px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(to right, #d4145a, #fbb03b);
+            border-radius: 20px 20px 0 0;
+            color: white;
+            padding: 20px 10px;
+        }
+
+        h1 {
+            letter-spacing: 8px;
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        .subheading {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            color: white;
+            margin: 5px;
+        }
+
+        .purple {
+            background: #c85fd6;
+        }
+
+        .blue {
+            background: #86b9ff;
+        }
+
+        .gold {
+            background: #ffeaa7;
+            color: #555;
+        }
+
+        .red {
+            background: #d63031;
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #00c4a7;
+            width: 0%;
+            border-radius: 8px;
+            transition: width 0.3s;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+        }
+
+        .btn.hint {
+            background: #ffcc00;
+            color: black;
+        }
+
+        .btn.green {
+            background: #00b894;
+            color: white;
+        }
+
+        .btn.red {
+            background: #d63031;
+            color: white;
+        }
+
+        .btn.gray {
+            background: #dfe6e9;
+            color: #333;
+        }
+
+        .answer-box,
+        .letters-box {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .answer-box div,
+        .letters-box button {
+            width: 4rem;
+            height: 4rem;
+            background: #f1f2f6;
+            border-radius: 10px;
+            font-size: 2.3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px #7d5fff;
+            cursor: pointer;
+            color: #7d5fff;
+        }
+
+        .letters-box button {
+            background: #7d5fff;
+            color: white;
+            border: none;
+        }
+
+        .letters-box button.used {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .letters-box button:hover {
+            animation: shake 0.5s ease-in;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #hint-text {
+            color: #7d5fff;
+            font-weight: 700;
+        }
+
+        .answer-box.animate {
+            animation: shake 0.5s;
+            animation-iteration-count: ease-in;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .benar {
+            animation: melayang 1s ease-in-out;
+        }
+
+        @keyframes melayang {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        #result-screen {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #result-screen h2 {
+            font-size: 32px;
+            color: #8e24aa;
+            margin-bottom: 10px;
+        }
+
+        .checkmark {
+            font-size: 48px;
+            color: #ffca28;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            background: #f3e5f5;
+            padding: 20px 30px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .result-box p {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #6a1b9a;
+        }
+
+        .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .result-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #next-level {
+            background: #00c853;
+            color: #fff;
+        }
+
+        #next-level:hover {
+            background: #00e676;
+        }
+
+        #level-select {
+            background: #9c27b0;
+            color: #fff;
+        }
+
+        #level-select:hover {
+            background: #ba68c8;
+        }
+
+        .level-btn {
+            background: #89cfff;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .level-btn.before:hover {
+            transform: scale(1.2);
+        }
+
+        .level-btn.before {
+            background: #007aff;
+        }
+
+        .level-btn.after {
+            background: #00c853;
+        }
+
+        .level-btn small {
+            display: block;
+            font-size: 14px;
+            font-weight: normal;
+            color: #e5e5e5;
+        }
+
+
+        @media (max-width: 480px) {
+
+            .container,
+            #level-screen {
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Halaman Game -->
+        <div id="game-screen">
+            <div class="header">
+                <h1>W O R D S F U N</h1>
+                <p class="subheading">Unscramble the letters to find the word!</p>
+            </div>
+
+            <div style="padding: 20px; text-align: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <span class="pill purple">Level <span id="level-number"
+                                style="font-weight: 700;">2</span></span>
+                        <span class="pill blue"><strong>Word <span id="word-count">1</span>/10</strong></span>
+                        <span class="pill red"><strong>Total Score: <span id="totalScore-count">0</span></strong></span>
+                    </div>
+                    <div class="pill gold"><strong>Level Score: <span id="score-count"></span></strong></div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-bar-fill"></div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                    <p style="margin-top: 15px;">Hint: <span id="hint-text">?</span></p>
+                    <p id="answer-text" style="margin-left: 15px;margin-right: 15px;"></p>
+                    <button id="hint" class="btn hint" onclick="showHint()">Show Hint (-5 points)</button>
+                </div>
+
+                <div class="answer-box" id="answer-box"></div>
+
+                <div class="letters-box" id="letters-box"></div>
+
+                <div class="button-group">
+                    <button class="btn red" onclick="resetWord()">Reset</button>
+                    <button class="btn green" onclick="checkAnswer()">Cek Jawaban</button>
+                    <button class="btn gray" onclick="backToLevels()">Kembali ke Level</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="level-screen" class="hidden">
+            <div class="header">
+                <h1>W O R D S F U N</h1>
+                <p class="subheading">Unscramble the letters to find the word!</p>
+            </div>
+            <h2 style="color: #6d00a2; margin-top: 20px;">Choose a Level</h2>
+            <div
+                style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 20px; max-width: 800px; margin: auto;">
+                <button class="level-btn after">Level 1<br><small>Hewan</small></button>
+                <button class="level-btn after">Level 2<br><small>Warna</small></button>
+                <button class="level-btn after" onclick="startLevel()">Level 3<br><small>Makanan</small></button>
+                <button class="level-btn before" >Level 4<br><small>🔐Sekolah</small></button>
+                <button class="level-btn">Level 5<br><small>🔐 Olahraga</small></button>
+                <button class="level-btn">Level 6<br><small>🔐Cuaca</small></button>
+                <button class="level-btn">Level 7<br><small>🔐Ruang Angkasa</small></button>
+                <button class="level-btn">Level 8<br><small>🔐Transportasi</small></button>
+                <button class="level-btn">Level 9<br><small>🔐Pekerjaan</small></button>
+                <button class="level-btn">Level 10<br><small>🔐Teknologi</small></button>
+            </div>
+            <div class="button-group">
+                <button class="btn green">Total Score: <span id="score-total">0</span></button>
+                <button class="btn red" onclick="backToGame()">Kembali Ke Game</button>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="result-screen" class="hidden">
+            <h2>Level Complete!</h2>
+            <div class="checkmark">✔</div>
+            <div class="result-box">
+                <p><strong>Level Score:</strong> <span id="level-score">0</span></p>
+                <p><strong>Total Score:</strong> <span id="total-score">0</span></p>
+                <p><strong>Words Solved:</strong> <span id="words-solved">0</span></p>
+            </div>
+            <div class="result-buttons">
+                <button id="next-level" onclick="startLevel()">Next Level</button>
+                <button id="level-select" onclick="resetScore()">Reset Score</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            { word: "merah", hint: "Warna darah" },
+            { word: "biru", hint: "Warna langit cerah" },
+            { word: "hijau", hint: "Warna daun" },
+            { word: "kuning", hint: "Warna pisang" },
+            { word: "putih", hint: "Warna salju" },
+            { word: "hitam", hint: "Warna batu" },
+            { word: "ungu", hint: "Warna anggur" },
+            { word: "coklat", hint: "Warna tanah" },
+            { word: "pink", hint: "Warna perempuan" },
+            { word: "oranye", hint: "Warna jeruk" }
+        ];
+
+        let currentWordIndex = 0;
+        let totalScore = parseInt(localStorage.getItem("totalScore")) || 0; // Skor total
+        let levelScore = 0; // Skor per level
+        let answerSlots = [];
+        let selectedLetters = [];
+        let wordsSolved = 0;
+        const totalWords = words.length;
+
+        // Acak urutan soal sekali saja
+        let shuffledWords = shuffleArray([...words]);
+        loadWord();
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function loadWord() {
+            const current = shuffledWords[currentWordIndex];
+
+            // Hanya huruf yang diacak, hint tetap sesuai
+            const shuffledLetters = [...current.word].sort(() => Math.random() - 0.5);
+
+            selectedLetters = [];
+            answerSlots = Array(current.word.length).fill("");
+            document.getElementById("answer-box").classList.remove("benar");
+
+            document.getElementById("hint-text").textContent = "?";
+            document.getElementById("word-count").textContent = currentWordIndex + 1;
+            document.getElementById("progress-bar-fill").style.width = ((currentWordIndex / words.length) * 100) + "%";
+
+            // Tampilkan huruf acak
+            const lettersBox = document.getElementById("letters-box");
+            lettersBox.innerHTML = "";
+            shuffledLetters.forEach((ch) => {
+                const btn = document.createElement("button");
+                btn.textContent = ch.toUpperCase();
+                btn.onclick = () => selectLetter(btn, ch);
+                lettersBox.appendChild(btn);
+            });
+
+            // Slot jawaban kosong
+            const answerBox = document.getElementById("answer-box");
+            answerBox.innerHTML = "";
+            for (let i = 0; i < current.word.length; i++) {
+                const slot = document.createElement("div");
+                slot.textContent = "";
+                answerBox.appendChild(slot);
+            }
+
+            updateScoreDisplay();
+        }
+
+        function selectLetter(btn, ch) {
+            const slots = document.querySelectorAll("#answer-box div");
+            const emptyIndex = answerSlots.findIndex(s => s === "");
+            if (emptyIndex !== -1) {
+                answerSlots[emptyIndex] = ch;
+                slots[emptyIndex].textContent = ch.toUpperCase();
+                btn.classList.add("used");
+            }
+        }
+
+        function resetWord() {
+            answerSlots = answerSlots.map(() => "");
+            const slots = document.querySelectorAll("#answer-box div");
+            slots.forEach(slot => slot.textContent = "");
+
+            document.querySelectorAll("#letters-box button").forEach(btn => {
+                btn.classList.remove("used");
+            });
+            document.getElementById("answer-text").classList.add("hidden");
+            document.getElementById("hint-text").classList.remove("hidden");
+            document.getElementById("hint").classList.remove("hidden");
+        }
+
+        function showHint() {
+            const hint = shuffledWords[currentWordIndex].hint;
+            document.getElementById("hint-text").textContent = hint;
+            levelScore = Math.max(levelScore - 5);
+            totalScore = Math.max(totalScore - 5, 0);
+            updateScoreDisplay();
+        }
+
+        function checkAnswer() {
+            const current = shuffledWords[currentWordIndex];
+            const userAnswer = answerSlots.join("").toLowerCase();
+
+            if (userAnswer === current.word) {
+                launchConfetti();
+                document.getElementById("answer-box").classList.add("benar");
+
+                levelScore += 10;
+                totalScore += 10;
+                wordsSolved++;
+                saveTotalScore();
+                updateScoreDisplay();
+
+                currentWordIndex++;
+                setTimeout(() => {
+                    if (currentWordIndex < words.length) {
+                        loadWord();
+                    } else {
+                        showResultScreen();
+                    }
+                }, 1000);
+            } else {
+                document.getElementById("answer-box").classList.add("animate");
+                document.getElementById("hint-text").classList.add("hidden");
+                document.getElementById("hint").classList.add("hidden");
+                document.getElementById("answer-text").innerHTML = `<span class="btn red">Jawaban Salah</span>`;
+                levelScore = Math.max(levelScore - 2);
+                totalScore = Math.max(totalScore - 2, 0);
+                saveTotalScore();
+                updateScoreDisplay();
+                setTimeout(() => {
+                    resetWord();
+                }, 1500);
+            }
+        }
+
+        function saveTotalScore() {
+            localStorage.setItem("totalScore", totalScore);
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById("score-count").textContent = levelScore; // untuk level
+            document.getElementById("totalScore-count").textContent = totalScore; // untuk total
+            document.getElementById("score-total").textContent = totalScore; // untuk total
+        }
+
+        function launchConfetti() {
+            confetti({
+                particleCount: 50,
+                spread: 70,
+                origin: { y: 1 } // dari atas
+            });
+        }
+
+        function backToLevels() {
+            document.getElementById("game-screen").style.display = "none";
+            document.getElementById("level-screen").style.display = "block";
+        }
+
+        function startGame() {
+            document.querySelector(".container").style.display = "none";
+            document.getElementById("level-screen").style.display = "block";
+        }
+
+        function backToGame() {
+            document.getElementById("game-screen").style.display = "block";
+            document.getElementById("level-screen").style.display = "none";
+        }
+
+        function showResultScreen() {
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("result-screen").classList.remove("hidden");
+
+            document.getElementById("level-score").textContent = levelScore;
+            document.getElementById("total-score").textContent = totalScore;
+            document.getElementById("words-solved").textContent = `${wordsSolved}/${totalWords}`;
+        }
+
+        function resetScore() {
+            localStorage.removeItem("totalScore");
+            location.reload();
+        }
+
+        function startLevel() {
+            window.location.href = "level3.html";
+        }
+
+    </script>
+</body>
+
+</html>

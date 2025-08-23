@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kuis Level 1 - Quizlamic Kid</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f9ff;
+    background-image:url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%2393c5fd" fill-opacity="0.2"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .quiz-box {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-bar button {
+            padding: 6px 12px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .level {
+            font-size: 20px;
+            color: #00897b;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: #e0f7fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .hint {
+            background: #fff9c4;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .answers button {
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .answers button:hover {
+            transform: scale(1.03);
+        }
+
+        .green {
+            color: #00c853;
+        }
+
+        .red {
+            color: #e53935;
+        }
+
+        .purple {
+            color: #ba68c8;
+        }
+
+        .btn-red {
+            background-color: #e53935;
+        }
+
+        .btn-blue {
+            background-color: #1e88e5;
+        }
+
+        .btn-green {
+            background-color: #00c853;
+        }
+
+        .btn-purple {
+            background-color: #ba68c8;
+        }
+
+        .bottom-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .hint-btn {
+            background: #ffc107;
+            color: #000;
+            padding: 10px 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .counter {
+            background: #b2f5ea;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* ✅ Jawaban Benar Section */
+        .feedback-box {
+            text-align: center;
+            margin-top: 30px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-box img {
+            width: 60px;
+            margin-bottom: 10px;
+        }
+
+        .feedback-box h2 {
+
+            margin: 10px 0;
+        }
+
+        .feedback-text {
+            background: #e0f7e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .benar-btn {
+            background: #2e7d32;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .salah-btn {
+            background: #e53935;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .score-box {
+            background: #ffffffef;
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 700px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      display: none;
+        }
+
+        .score-box.active, .quiz-box.active {
+      display: block;
+    }
+
+        .score-box h2 {
+      color: #00897b;
+    }
+
+        @media (max-width: 600px) {
+            .answers {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-box" id="quizSection">
+        <div class="top-bar">
+            <button onclick="goToMenu()">← Menu</button>
+            <div class="level">Level 1</div>
+            <div class="counter" id="counter">1/10</div>
+        </div>
+
+        <div id="questionArea"></div>
+
+        <div class="bottom-bar">
+            <button class="hint-btn" id="btn-hint" onclick="showHint()">💡 Petunjuk</button>
+            <button class="hint-btn" id="close-hint" style="display: none;" onclick="closeHint()">❌ Close Hint</button>
+            
+        </div>
+    </div>
+
+    <!-- Skor akhir -->
+    <div class="score-box" style="text-align: center;" id="scoreBox">
+        <h2>🎉 Level Selesai!</h2>
+        <p class="green">Kamu berhasil menjawab <strong id="finalAnswer"></strong> dari 10 pertanyaan!</p>
+        <div style="background: #c8f7dc;text-align: center;color: #00695c;"><h3 style="font-size: 2rem;margin-bottom: 1rem;">Nilai<br><strong id="finalScore"></strong><strong>0</strong></h3></div>
+        <div style="display: flex;gap:15px;align-items: center;justify-content: center;">
+        <button class="benar-btn" onclick="restartQuiz()">Level Selanjutnya</button>
+        <button class="salah-btn" onclick="goToMenu()">Menu Utama</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+                {
+                question: "Siapa yang menciptakan kita?",
+                options: ["Allah SWT", "Manusia", "Hewan", "Tumbuhan"],
+                answer: "Allah SWT",
+                hint: "Dialah Tuhan semesta alam.",
+                fakta: "Allah SWT adalah pencipta kita dan seluruh alam semesta. Allah Maha Kuasa dan Maha Penyayang."
+            },
+            {
+                question: "Siapa nabi terakhir dalam Islam?",
+                options: ["Nabi Isa", "Nabi Musa", "Nabi Muhammad", "Nabi Nuh"],
+                answer: "Nabi Muhammad",
+                hint: "Beliau menerima wahyu Al-Qur'an.",
+                fakta: "Nabi Muhammad adalah nabi terakhir."
+            },
+            {
+                question: "Apa kitab suci umat Islam?",
+                options: ["Injil", "Taurat", "Zabur", "Al-Qur'an"],
+                answer: "Al-Qur'an",
+                hint: "Diturunkan kepada Nabi Muhammad SAW.",
+                fakta: "Al-Qur'an adalah kitab suci umat Islam yang diturunkan kepada Nabi Muhammad SAW melalui malaikat Jibril."
+            },
+            {
+                question: "Bulan suci umat Islam disebut?",
+                options: ["Syawal", "Ramadhan", "Muharram", "Rabiul Awal"],
+                answer: "Ramadhan",
+                hint: "Di bulan ini kita berpuasa.",
+                fakta: "Ramadhan adalah bulan diturunkannya Al-Qur'an."
+            },
+            {
+                question: "Apa arti dari 'Islam'?",
+                options: ["Kebaikan", "Kedamaian", "Keberanian", "Kekuatan"],
+                answer: "Kedamaian",
+                hint: "Lawan kata dari perang.",
+                fakta: "Islam berarti 'kedamaian' dan 'berserah diri kepada Allah'. Islam mengajarkan kedamaian dan kepatuhan kepada Allah."
+            },
+            {
+                question: "Apa rukun Islam yang pertama?",
+                options: ["Shalat", "Zakat", "Syahadat", "Puasa"],
+                answer: "Syahadat",
+                hint: "Pernyataan keimanan kepada Allah dan Rasul-Nya.",
+                fakta: "Syahadat merupakan pintu masuk Islam."
+            },
+            {
+                question: "Berapa kali umat Islam shalat dalam sehari?",
+                options: ["3 kali", "5 kali", "6 kali", "4 kali"],
+                answer: "5 kali",
+                hint: "Jumlahnya sama dengan jari di satu tangan.",
+                fakta: "Umat Islam diwajibkan shalat 5 kali sehari: Subuh, Dzuhur, Ashar, Maghrib, dan Isya."
+            },
+            {
+                question: "Apa nama tempat ibadah umat Islam?",
+                options: ["Gereja", "Masjid", "Pura", "Wihara"],
+                answer: "Masjid",
+                hint: "Kita shalat di sana.",
+                fakta: "Masjid berasal dari kata 'sajada' yang berarti sujud."
+            },
+            {
+                question: "Siapa nabi pertama dalam Islam?",
+                options: ["Nabi Muhammad", "Nabi Adam", "Nabi Musa", "Nabi Yahya"],
+                answer: "Nabi Adam",
+                hint: "Dia adalah manusia pertama yang diciptakan Allah.",
+                fakta: "Nabi Adam AS adalah manusia pertama yang diciptakan Allah dan juga nabi pertama."
+            },
+            {
+                question: "Kota suci umat Islam adalah?",
+                options: ["Medinah", "Yerusalem", "Mekkah", "Baghdad"],
+                answer: "Mekkah",
+                hint: "Ka'bah berada di kota ini.",
+                fakta: "Mekkah adalah tempat lahir Nabi Muhammad SAW."
+            }
+            ];
+
+            let current = 0;
+            let score = 0;
+
+        function renderQuestion() {
+            const q = questions[current];
+            const area = document.getElementById("questionArea");
+            const counter = document.getElementById("counter");
+            // document.getElementById("nextBtn").style.display = "none";
+            counter.textContent = `Soal : ${current + 1}/${questions.length}`;
+
+            area.innerHTML = `
+            <div class="question-card">
+                <div class="question">${q.question}</div>
+                <div class="hint" id="hint" style="display:none;">${q.hint}</div>
+            </div>
+            <div class="answers">
+                ${q.options.map((opt, idx) => `<button class="btn-${['blue', 'red', 'green', 'purple'][idx]}" onclick="checkAnswer(this)">${opt}</button>`).join('')}
+            </div>
+            `;
+        }
+
+        function checkAnswer(btn) {
+            const q = questions[current];
+            const selected = btn.textContent.trim();
+            const correct = questions[current].answer;
+            if (selected === correct) {
+                score++;
+                document.getElementById("questionArea").innerHTML = `<div class="feedback-box">
+                <h1>😊</h1>
+        <h2 class="green">Jawaban Benar!</h2>
+        <div class="feedback-text">${q.fakta}</div>
+        <button class="benar-btn" id="nextBtn" onclick="nextQuestion()">Lanjut →</button>
+    </div>
+    </div>`
+            } else {
+                document.getElementById("questionArea").innerHTML = `<div class="feedback-box">
+                <h1>😊</h1>
+        <h2 class="red">Jawaban SALAH!</h2>
+        <div class="feedback-text">${q.fakta}</div>
+        <button class="salah-btn" id="nextBtn" onclick="nextQuestion()">Lanjut →</button>
+    </div>
+    </div>`
+            }
+            document.getElementById("btn-hint").style.display = "none";
+            document.getElementById("close-hint").style.display = "none";
+        }
+
+        function nextQuestion() {
+            current++;
+            document.getElementById("btn-hint").style.display = "block";
+            document.getElementById("close-hint").style.display = "none";
+            if (current >= questions.length) {
+                document.getElementById("quizSection").style.display = "none";
+                document.getElementById("scoreBox").classList.add("active");
+                document.getElementById("finalScore").textContent = score;
+                document.getElementById("finalAnswer").textContent = score;
+                return;
+            }
+            renderQuestion();
+        }
+
+        function showHint() {
+            document.getElementById("hint").style.display = "block";
+            document.getElementById("btn-hint").style.display = "none";
+            document.getElementById("close-hint").style.display = "inline-block";
+        }
+
+        function closeHint() {
+            document.getElementById("hint").style.display = "none";
+            document.getElementById("btn-hint").style.display = "inline-block";
+            document.getElementById("close-hint").style.display = "none";
+        }
+
+        function goToMenu() {
+            window.location.href = "quizlamic.html";
+        }
+
+        function restartQuiz() {
+                window.location.href = "level2.html";
+            }
+
+        renderQuestion();
+    </script>
+</body>
+
+</html>

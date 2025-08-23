@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-blue-100">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stage 2 - Animals Quiz Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        h1 {
+            font-family: 'Fredoka One', cursive;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .float-emoji {
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        .float-delay-1 {
+            animation-delay: 0s;
+        }
+
+        .float-delay-2 {
+            animation-delay: 0.3s;
+        }
+
+        .float-delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        .float-delay-4 {
+            animation-delay: 0.9s;
+        }
+
+        .float-delay-5 {
+            animation-delay: 1.2s;
+        }
+
+        .answers:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body class="bg-blue-100 min-h-screen flex flex-col items-center justify-start pt-10 px-4">
+
+    <!-- Landing Page
+    <div id="landing" class="max-w-2xl bg-white rounded-2xl p-8 shadow-lg text-center stage-transition">
+        <h1 class="text-5xl text-blue-700 font-bold mb-3">MATH PLAY</h1>
+        <div class="flex justify-center gap-4 mb-4 text-5xl mx-2">
+            <span class="float-emoji float-delay-1">🍎</span>
+            <span class="float-emoji float-delay-2">🍌</span>
+            <span class="float-emoji float-delay-3">🍊</span>
+            <span class="float-emoji float-delay-4">🍓</span>
+            <span class="float-emoji float-delay-5">🍇</span>
+        </div>
+        <p class="text-gray-700 mb-8 text-xl">Learn math with fun fruit icons! Progress through 5 exciting stages.</p>
+        <button onclick="startQuiz()"
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full text-lg">
+            Start Playing!
+        </button>
+    </div> -->
+
+    <!-- HEADER -->
+    <div id="quizHeader"
+        class="w-full max-w-2xl mx-auto flex justify-between items-center px-4 py-2 bg-blue-200 rounded-full shadow mb-4 font-bold text-sm text-gray-800">
+        <div class="bg-white rounded-full px-4 py-1 shadow">Stage 2: Animals</div>
+        <div class="bg-white rounded-full px-4 py-1 shadow">Score: <span id="score">0</span></div>
+    </div>
+
+    <!-- QUIZ CONTAINER -->
+    <div id="quizContainer" class="max-w-2xl w-full bg-white rounded-3xl shadow-xl p-6 text-center">
+        <h2 class="text-xl font-bold mb-4" id="progressLabel">Question 1/10</h2>
+        <div id="question" class="text-3xl mb-4 mt-4">🍎🍎🍎 - 🍎 = ?</div>
+
+        <!-- Hint Button -->
+        <button id="hintBtn" onclick="showHint()"
+            class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold px-5 py-2 rounded-full mb-4 mt-4">
+            Hint
+        </button>
+        <div id="hintBox"
+            class="bg-yellow-100 border border-yellow-300 text-yellow-800 rounded p-3 mb-4 hidden text-sm">
+            <span id="hintText"></span>
+        </div>
+    </div>
+
+
+    <!-- Answer Options -->
+    <div id="opt" class="max-w-2xl w-full rounded-3xl shadow-xl p-6 text-center mt-2">
+        <div id="options" class="grid grid-cols-2 gap-4 mx-auto">
+            <!-- Diisi lewat JavaScript -->
+            <!-- Tombol Next Question -->
+        </div>
+
+        <div id="feedback" class="text-xl mt-4 font-semibold"></div>
+        <button id="nextBtn" onclick="nextQuestion()"
+            class="hidden bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full mt-4">
+            Next Question →
+        </button>
+    </div>
+
+
+    <!-- Result Container -->
+    <div id="resultContainer" class="hidden max-w-xl w-full bg-white rounded-3xl shadow-xl p-8 mt-6 text-center">
+        <h2 class="text-4xl font-bold text-green-600 mb-4">Stage 2 Complete!</h2>
+        <h1 class="text-5xl">🎉</h1>
+        <p id="finalScore" class="text-2xl text-gray-800 mb-4"></p>
+        <button onclick="startQuiz()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full">
+            Next Stage
+        </button>
+    </div>
+
+    <script>
+        const questions = [
+                // 1
+                {
+                    question: "🐶🐶🐶🐶🐶🐶 + 🐶🐶🐶 = ❓",
+                    options: ["8", "9", "10", "7"],
+                    answer: "9",
+                    hint: "Hitung jumlah anjing 🐶 total"
+                },
+                // 2
+                {
+                    question: "🐱🐱🐱🐱🐱 - 🐱🐱 = ❓",
+                    options: ["3", "2", "4", "5"],
+                    answer: "3",
+                    hint: "Kurangi 2 dari 5 kucing 🐱"
+                },
+                // 3
+                {
+                    question: "🦊🦊 + 🦊🦊🦊 + 🦊 = ❓",
+                    options: ["6", "5", "4", "7"],
+                    answer: "6",
+                    hint: "Gabungkan semua rubah 🦊"
+                },
+                // 4
+                {
+                    question: "🐰🐰🐰🐰🐰🐰 - 🐰🐰🐰 = ❓",
+                    options: ["2", "3", "4", "5"],
+                    answer: "3",
+                    hint: "Ada 6 kelinci, dikurangi 3 🐰"
+                },
+                // 5
+                {
+                    question: "🐭🐭🐭🐭 + 🐭🐭 - 🐭 = ❓",
+                    options: ["5", "6", "4", "3"],
+                    answer: "5",
+                    hint: "4 + 2 - 1 = ?"
+                },
+                // 6
+                {
+                    question: "🐶🐶🐶 + 🐶🐶 - 🐶🐶 = ❓",
+                    options: ["2", "3", "4", "5"],
+                    answer: "3",
+                    hint: "3 + 2 = 5, lalu kurangi 2 🐶"
+                },
+                // 7
+                {
+                    question: "🐱🐱 + 🐱🐱🐱 + 🐱 - 🐱🐱 = ❓",
+                    options: ["4", "5", "6", "3"],
+                    answer: "4",
+                    hint: "2 + 3 + 1 = 6, lalu -2"
+                },
+                // 8
+                {
+                    question: "🦊🦊🦊🦊🦊 + 🦊🦊 - 🦊🦊🦊 = ❓",
+                    options: ["3", "4", "5", "6"],
+                    answer: "4",
+                    hint: "5 + 2 = 7, dikurangi 3"
+                },
+                // 9
+                {
+                    question: "🐰🐰🐰 + 🐰🐰🐰🐰 - 🐰 = ❓",
+                    options: ["5", "6", "7", "8"],
+                    answer: "6",
+                    hint: "3 + 4 = 7, lalu -1"
+                },
+                // 10
+                {
+                    question: "🐭🐭🐭🐭🐭 + 🐭🐭 - 🐭🐭🐭 = ❓",
+                    options: ["3", "4", "5", "6"],
+                    answer: "4",
+                    hint: "5 + 2 = 7, -3"
+                }
+            ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startQuiz() {
+            document.getElementById("quizHeader").classList.remove("hidden");
+            document.getElementById("opt").classList.remove("hidden");
+            document.getElementById("quizContainer").classList.remove("hidden");
+            document.getElementById("resultContainer").classList.add("hidden");
+
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById("score").innerText = score;
+            shuffleArray(questions); // Acak pertanyaan
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+
+            document.getElementById("progressLabel").innerText = `Question ${currentQuestion + 1}/${questions.length}`;
+            document.getElementById("question").innerText = q.question;
+            document.getElementById("hintText").innerText = q.hint;
+            document.getElementById("hintBox").classList.add("hidden");
+
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+            document.getElementById("feedback").innerText = "";
+
+            q.options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.innerText = option;
+                btn.className = "answers bg-white hover:bg-white-500 text-gray-800 font-bold py-4 px-6 rounded-xl text-2xl shadow-md transition-all";
+                btn.onclick = () => checkAnswer(option);
+                optionsDiv.appendChild(btn);
+            });
+            document.getElementById("nextBtn").classList.add("hidden");
+        }
+
+        function checkAnswer(selected) {
+            const correct = questions[currentQuestion].answer;
+            const explanation = questions[currentQuestion].question;
+            const feedback = document.getElementById("feedback");
+            const buttons = document.querySelectorAll("#options button");
+
+            buttons.forEach(btn => {
+                btn.disabled = true; // Disable semua tombol
+
+                if (btn.innerText === correct) {
+                    btn.classList.add("bg-green-400", "text-white");
+                } else if (btn.innerText === selected) {
+                    btn.classList.add("bg-red-400", "text-white");
+                } else {
+                    btn.classList.add("opacity-100");
+                }
+
+                btn.classList.remove('hover:bg-blue-500', 'answers'); // Hilangkan efek hover
+            });
+
+            if (selected === correct) {
+                feedback.innerHTML = `Explanation : <br>Benar! 🎉<br>${explanation} = ${correct}`;
+                feedback.className = "text-green-600 mt-4 font-bold";
+                score+=10;
+                document.getElementById("score").innerText = score;
+            } else {
+                feedback.innerText = `Salah! Jawaban benar: ${correct}`;
+                feedback.className = "text-red-600 mt-4 font-bold";
+            }
+
+            document.getElementById("nextBtn").classList.remove("hidden");
+        }
+
+        function showHint() {
+            document.getElementById("hintBox").classList.remove("hidden");
+        }
+
+        function showResult() {
+            document.getElementById("quizHeader").classList.add("hidden");
+            document.getElementById("opt").classList.add("hidden");
+            document.getElementById("quizContainer").classList.add("hidden");
+            document.getElementById("resultContainer").classList.remove("hidden");
+            document.getElementById("finalScore").innerHTML = `Skor Kamu: <b>${score}</b> / 100`;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function nextStage() {
+            window.location.href = "stage3.html";
+        }
+        startQuiz();
+
+    </script>
+</body>
+
+</html>

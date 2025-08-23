@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Words Fun</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container, #level-screen {
+            background: white;
+            max-width: 780px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(to right, #d4145a, #fbb03b);
+            border-radius: 20px 20px 0 0;
+            color: white;
+            padding: 20px 10px;
+        }
+
+        h1 {
+            letter-spacing: 8px;
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        .subheading {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .welcome {
+            color: #6d00a2;
+            margin-top: 20px;
+        }
+
+        .rules {
+            margin: 20px 0;
+            background: #fff7c2;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .rules strong {
+            color: #b28500;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .rules ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .start-btn {
+            background: #00d084;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+            transition: 0.3s;
+        }
+
+        .start-btn:hover {
+            background: #00b36b;
+        }
+
+         .level-btn {
+            background: #89cfff;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    
+        .level-btn:nth-child(1):hover {
+            transform: scale(1.2);
+        }
+    
+        .level-btn:nth-child(1) {
+            background: #007aff;
+        }
+    
+        .level-btn small {
+            display: block;
+            font-size: 14px;
+            font-weight: normal;
+            color: #e5e5e5;
+        }
+
+        @media (max-width: 480px) {
+            .container, #level-screen {
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>W O R D S F U N</h1>
+            <p class="subheading">Unscramble the letters to find the word!</p>
+        </div>
+        <div class="welcome">
+            <h2>Welcome to WORDS FUN!</h2>
+            <p>Rearrange the scrambled letters to make real words.</p>
+            <p>Complete all 10 levels to become a word master!</p>
+        </div>
+        <div class="rules">
+            <strong>How to Play:</strong>
+            <ol>
+                <li>Tap on the scrambled letters to place them in the answer slots</li>
+                <li>Use the hint button if you get stuck (but you'll earn fewer points)</li>
+                <li>Complete each word to advance to the next puzzle</li>
+                <li>Finish all puzzles in a level to unlock the next level</li>
+            </ol>
+        </div>
+        <button class="start-btn" onclick="startGame()">Start Playing!</button>
+    </div>
+
+    
+    <!-- Tambahkan setelah tombol start-btn -->
+    <div id="level-screen" style="display: none;">
+        <div class="header">
+            <h1>W O R D S F U N</h1>
+            <p class="subheading">Unscramble the letters to find the word!</p>
+        </div>
+        <h2 style="color: #6d00a2; margin-top: 20px;">Choose a Level</h2>
+        <div
+            style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 20px; max-width: 780px; margin: auto;">
+            <button class="level-btn" onclick="startLevel(1)">Level 1<br><small>Animals</small></button>
+            <button class="level-btn" onclick="startLevel(2)">Level 2<br><small>Colors</small></button>
+            <button class="level-btn" onclick="startLevel(3)">Level 3<br><small>Food</small></button>
+            <button class="level-btn" onclick="startLevel(4)">Level 4<br><small>School</small></button>
+            <button class="level-btn" onclick="startLevel(5)">Level 5<br><small>Sports</small></button>
+            <button class="level-btn" onclick="startLevel(6)">Level 6<br><small>Weather</small></button>
+            <button class="level-btn" onclick="startLevel(7)">Level 7<br><small>Space</small></button>
+            <button class="level-btn" onclick="startLevel(8)">Level 8<br><small>Transportation</small></button>
+            <button class="level-btn" onclick="startLevel(9)">Level 9<br><small>Jobs</small></button>
+            <button class="level-btn" onclick="startLevel(10)">Level 10<br><small>Technology</small></button>
+        </div>
+        <div style="display: flex;justify-content: space-between;">
+        <p style="color: #6d00a2;">Total Score: <span id="score">0</span></p>
+        <button class="start-btn" onclick="backToStart()">Back to Start</button>
+        </div>
+    </div>
+    
+
+
+    <script>
+        function startGame() {
+                document.querySelector(".container").style.display = "none";
+                document.getElementById("level-screen").style.display = "block";
+            }
+
+            function backToStart() {
+                document.getElementById("level-screen").style.display = "none";
+                document.querySelector(".container").style.display = "block";
+            }
+
+            function startLevel() {
+                window.location.href = "level1.html";
+            }
+    </script>
+</body>
+
+</html>

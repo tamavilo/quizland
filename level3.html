@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kuis Level 3 - Quizlamic Kid</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f9ff;
+            background-image: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%2393c5fd" fill-opacity="0.2"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .quiz-box {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-bar button {
+            padding: 6px 12px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .level {
+            font-size: 1.5rem;
+            line-height: 2rem;
+            color: #00897b;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: rgb(236 253 245 / 1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            line-height: 1.75rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #064e3b;
+        }
+
+        .hint {
+            background: #fff9c4;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .answers button {
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .answers button:hover {
+            transform: scale(1.03);
+        }
+
+        .green {
+            color: #00c853;
+        }
+
+        .red {
+            color: #e53935;
+        }
+
+        .purple {
+            color: #ba68c8;
+        }
+
+        .btn-red {
+            background-color: #e53935;
+        }
+
+        .btn-blue {
+            background-color: #1e88e5;
+        }
+
+        .btn-green {
+            background-color: #00c853;
+        }
+
+        .btn-purple {
+            background-color: #ba68c8;
+        }
+
+        .bottom-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .hint-btn {
+            background: #ffc107;
+            color: #000;
+            padding: 10px 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .counter {
+            background: rgb(236 253 245 / 1);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* ✅ Jawaban Benar Section */
+        .feedback-box {
+            text-align: center;
+            margin-top: 30px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-box img {
+            width: 60px;
+            margin-bottom: 10px;
+        }
+
+        .feedback-box h2 {
+
+            margin: 10px 0;
+        }
+
+        .feedback-text {
+            background: rgb(236 253 245 / 1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #064e3b;
+        }
+
+        .benar-btn {
+            background: #2e7d32;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .salah-btn {
+            background: #e53935;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .score-box {
+            background: rgb(236 253 245 / 1);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .score-box.active,
+        .quiz-box.active {
+            display: block;
+        }
+
+        .score-box h2 {
+            color: #064e3b;
+        }
+
+        @media (max-width: 600px) {
+            .answers {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-box" id="quizSection">
+        <div class="top-bar">
+            <button onclick="goToMenu()">← Menu</button>
+            <div class="level">Level 3</div>
+            <div class="counter" id="counter">1/10</div>
+        </div>
+
+        <div id="questionArea"></div>
+
+        <div class="bottom-bar">
+            <button class="hint-btn" id="btn-hint" onclick="showHint()">💡 Petunjuk</button>
+            <button class="hint-btn" id="close-hint" style="display: none;" onclick="closeHint()">❌ Close Hint</button>
+
+        </div>
+    </div>
+
+    <!-- Skor akhir -->
+    <div class="score-box" style="text-align: center;" id="scoreBox">
+        <h2>🎉 Level Selesai!</h2>
+        <p class="green">Kamu berhasil menjawab <strong id="finalAnswer"></strong> dari 10 pertanyaan!</p>
+        <div style="background: #c8f7dc;text-align: center;color: #00695c;">
+            <h3 style="font-size: 2rem;margin-bottom: 1rem;">Nilai<br><strong
+                    id="finalScore"></strong><strong>0</strong></h3>
+        </div>
+        <div style="display: flex;gap:15px;align-items: center;justify-content: center;">
+            <button class="benar-btn" onclick="restartQuiz()">Level Selanjutnya</button>
+            <button class="salah-btn" onclick="goToMenu()">Menu Utama</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Berapa jumlah rakaat salat Subuh?",
+                options: ["2 rakaat", "3 rakaat", "4 rakaat", "5 rakaat"],
+                answer: "2 rakaat",
+                hint: "Salat ini dilakukan saat fajar.",
+                fakta: "Salat Subuh terdiri dari 2 rakaat dan dilakukan saat waktu fajar sebelum matahari terbit."
+            },
+            {
+                question: "Apa kitab suci umat Islam?",
+                options: ["Al-Qur'an", "Injil", "Taurat", "Zabur"],
+                answer: "Al-Qur'an",
+                hint: "Diturunkan kepada Nabi Muhammad.",
+                fakta: "Al-Qur'an adalah kitab suci umat Islam yang diturunkan kepada Nabi Muhammad SAW melalui malaikat Jibril."
+            },
+            {
+                question: "Apa arti dari kalimat 'Bismillah'?",
+                options: ["Dengan nama Allah", "Selamat pagi", "Terima kasih", "Sampai jumpa"],
+                answer: "Dengan nama Allah",
+                hint: "Kalimat ini diucapkan sebelum memulai sesuatu.",
+                fakta: "Kalimat 'Bismillah' berarti 'Dengan nama Allah' dan dianjurkan diucapkan sebelum melakukan aktivitas."
+            },
+            {
+                question: "Siapa malaikat yang menyampaikan wahyu?",
+                options: ["Jibril", "Mikail", "Israfil", "Izrail"],
+                answer: "Jibril",
+                hint: "Ia menyampaikan Al-Qur’an kepada Nabi Muhammad.",
+                fakta: "Malaikat Jibril adalah malaikat yang bertugas menyampaikan wahyu dari Allah kepada para nabi."
+            },
+            {
+                question: "Apa yang dilakukan saat puasa Ramadan?",
+                options: ["Menahan diri dari makan dan minum", "Makan sepanjang hari", "Tidur terus", "Berbelanja"],
+                answer: "Menahan diri dari makan dan minum",
+                hint: "Dimulai dari Subuh hingga Maghrib.",
+                fakta: "Puasa Ramadan adalah ibadah yang dilakukan dengan menahan diri dari makan, minum, dan hal-hal yang membatalkan mulai dari Subuh sampai Maghrib."
+            },
+            {
+                question: "Apa nama hari raya setelah Ramadan?",
+                options: ["Idul Fitri", "Idul Adha", "Maulid Nabi", "Isra Mi’raj"],
+                answer: "Idul Fitri",
+                hint: "Disebut juga lebaran.",
+                fakta: "Idul Fitri adalah hari raya umat Islam setelah satu bulan berpuasa di bulan Ramadan."
+            },
+            {
+                question: "Apa nama kota kelahiran Nabi Muhammad?",
+                options: ["Mekah", "Madinah", "Yerusalem", "Baghdad"],
+                answer: "Mekah",
+                hint: "Di sana juga terdapat Ka'bah.",
+                fakta: "Nabi Muhammad SAW lahir di kota Mekah pada tahun Gajah."
+            },
+            {
+                question: "Apa nama bulan ke-9 dalam kalender Islam?",
+                options: ["Ramadan", "Syawal", "Muharram", "Dzulhijjah"],
+                answer: "Ramadan",
+                hint: "Bulan di mana umat Islam berpuasa.",
+                fakta: "Ramadan adalah bulan suci umat Islam yang penuh berkah dan ampunan."
+            },
+            {
+                question: "Apa bacaan saat bersujud dalam salat?",
+                options: ["Subhana Rabbiyal A'la", "Allahu Akbar", "Alhamdulillah", "Bismillah"],
+                answer: "Subhana Rabbiyal A'la",
+                hint: "Bacaan ini memuliakan Allah Yang Maha Tinggi.",
+                fakta: "Saat sujud, umat Islam membaca 'Subhana Rabbiyal A'la' sebanyak tiga kali sebagai bentuk pujian kepada Allah."
+            },
+            {
+                question: "Siapa ibu Nabi Isa AS?",
+                options: ["Maryam", "Aisyah", "Khadijah", "Hajar"],
+                answer: "Maryam",
+                hint: "Ia wanita suci yang disebut dalam Al-Qur’an.",
+                fakta: "Maryam adalah ibu dari Nabi Isa AS, wanita yang sangat mulia dan disebut namanya dalam Al-Qur’an."
+            }
+        ];
+
+        let current = 0;
+        let score = 0;
+
+        function renderQuestion() {
+            const q = questions[current];
+            const area = document.getElementById("questionArea");
+            const counter = document.getElementById("counter");
+            // document.getElementById("nextBtn").style.display = "none";
+            counter.textContent = `Soal : ${current + 1}/${questions.length}`;
+
+            area.innerHTML = `
+            <div class="question-card">
+                <div class="question">${q.question}</div>
+                <div class="hint" id="hint" style="display:none;">${q.hint}</div>
+            </div>
+            <div class="answers">
+                ${q.options.map((opt, idx) => `<button class="btn-${['blue', 'red', 'green', 'purple'][idx]}" onclick="checkAnswer(this)">${opt}</button>`).join('')}
+            </div>
+            `;
+        }
+
+        function checkAnswer(btn) {
+            const q = questions[current];
+            const selected = btn.textContent.trim();
+            const correct = questions[current].answer;
+            if (selected === correct) {
+                score++;
+                document.getElementById("questionArea").innerHTML = `<div class="feedback-box">
+                <h1>😊</h1>
+        <h2 class="green">Jawaban Benar!</h2>
+        <div class="feedback-text">${q.fakta}</div>
+        <button class="benar-btn" id="nextBtn" onclick="nextQuestion()">Lanjut →</button>
+    </div>
+    </div>`
+            } else {
+                document.getElementById("questionArea").innerHTML = `<div class="feedback-box">
+                <h1>😊</h1>
+        <h2 class="red">Jawaban SALAH!</h2>
+        <div class="feedback-text">${q.fakta}</div>
+        <button class="salah-btn" id="nextBtn" onclick="nextQuestion()">Lanjut →</button>
+    </div>
+    </div>`
+            }
+            document.getElementById("btn-hint").style.display = "none";
+            document.getElementById("close-hint").style.display = "none";
+        }
+
+        function nextQuestion() {
+            current++;
+            document.getElementById("btn-hint").style.display = "block";
+            document.getElementById("close-hint").style.display = "none";
+            if (current >= questions.length) {
+                document.getElementById("quizSection").style.display = "none";
+                document.getElementById("scoreBox").classList.add("active");
+                document.getElementById("finalScore").textContent = score;
+                document.getElementById("finalAnswer").textContent = score;
+                return;
+            }
+            renderQuestion();
+        }
+
+        function showHint() {
+            document.getElementById("hint").style.display = "block";
+            document.getElementById("btn-hint").style.display = "none";
+            document.getElementById("close-hint").style.display = "inline-block";
+        }
+
+        function closeHint() {
+            document.getElementById("hint").style.display = "none";
+            document.getElementById("btn-hint").style.display = "inline-block";
+            document.getElementById("close-hint").style.display = "none";
+        }
+
+        function goToMenu() {
+            window.location.href = "quizlamic.html";
+        }
+
+        function restartQuiz() {
+            window.location.href = "level4.html";
+        }
+
+        renderQuestion();
+    </script>
+</body>
+
+</html>
