@@ -156,6 +156,10 @@
             background: #3498db;
         }
 
+        .btn-red {
+            background: #e74c3c;
+        }
+
         .help-modal {
             background: rgb(220 252 231 / 1);
             border: 4px solid rgb(234 179 8 / 1);
@@ -283,6 +287,7 @@
             <button class="btn btn-yellow" onclick="restartGame()">Restart Game</button>
             <button class="btn btn-blue" onclick="help()">How
                 to Play</button>
+            <button class="btn btn-red" onclick="home()">Home</button>
         </div>
     </div>
 
@@ -451,6 +456,11 @@
         function helpClose() {
             document.getElementById("help").style.display = 'none';
         }
+
+        function home () {
+            window.location.href = "index.html";
+        }
+        
         function restartGame() {
             score = 0;
             currentIndex = 0;
