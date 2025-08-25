@@ -87,6 +87,11 @@
             cursor: pointer;
         }
 
+        .gray {
+            background: #333;
+            color: #fff;
+        }
+
         @media (max-width: 600px) {
             .stats {
             display: flex;
@@ -107,6 +112,7 @@
             <div>Gerakan: <span id="moves">0</span></div>
             <div>Pasangan: <span id="matches">0</span>/8</div>
             <button onclick="startGame()">Mulai Ulang</button>
+            <button class="gray" onclick="menu()">Home</button>
         </div>
         <div class="grid" id="gameBoard"></div>
     </div>
@@ -183,6 +189,10 @@
         function updateStats() {
             document.getElementById('moves').textContent = moves;
             document.getElementById('matches').textContent = matched;
+        }
+
+        function menu() {
+            window.location.href = "index.html";
         }
 
         startGame();
